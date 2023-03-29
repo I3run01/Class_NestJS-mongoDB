@@ -4,6 +4,15 @@ import { User, UserDocument } from './entities/user.entity';
 import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { hash } from 'bcrypt'
+import * as base64 from 'base64-js';
+
+async function imageToBase64(url: string): Promise<string> {
+  const response = await fetch(url);
+  const buffer = await response.arrayBuffer();
+  const bytes = new Uint8Array(buffer);
+  const encodedImage = base64.fromByteArray(bytes);
+  return encodedImage;
+}
 
 @Injectable()
 export class UsersService {
@@ -24,8 +33,7 @@ export class UsersService {
 
     let hasUser = await this.userModel.findOne({id:id})
     if(hasUser !== null) {
-      console.log(hasUser)
-      return {status: 'user exists'}
+      return {hasUser}
       
     }
 
@@ -34,10 +42,12 @@ export class UsersService {
     let responseDatas = await responseInJson.data
 
     let token =  String(await hash(responseDatas.email, 10))
+    let encoded64 = await imageToBase64(responseDatas.avatar)
+    console.log(encoded64)
 
     return this.userModel.create({
       token: token,
-      imageInBase64: responseDatas.avatar,
+      imageInBase64: encoded64,
       id: responseDatas.id
     });
   }
