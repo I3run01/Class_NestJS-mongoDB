@@ -1,0 +1,68 @@
+Install NestJS
+    $ npm i -g @nestjs/cli
+    $ nest new project-name
+
+Create server 
+    server will probabily run in PORT: 3000
+
+    go to src/main.tsx do see the port
+        access: http://localhost:3000/
+
+To Create a CRUD
+    $ nest g resource
+
+    To create the DTO of your database: the index name that you have in your database
+        In -> src/users/create-user.dto
+
+    put the users.module.ts into the app.mudeles.ts
+        go to:
+            src/app.modules.ts
+
+            Imports: 
+                import { UsersModule } from './users/users.module'
+
+            put the userModule in:
+                @Module({
+                    import: [UsersModule]
+                })
+
+TO connect the mongoDB in your database
+    Install: 
+        $ npm i @nestjs/mongoose mongoose
+
+    In src/app.mudules.ts
+       In import, you put the link of you mongoDB
+            imports: [MongooseModule.forRoot('mongodb+srv://Bruno:1515@databases.i735gb3.mongodb.net/payever-test?retryWrites=true&w=majority')],
+
+    Create the schama:
+        Put the schame in -> src/users/entities/user.entity.ts
+
+        Go to this site to copy the base schema:
+            https://docs.nestjs.com/techniques/mongodb -> schemas/cat.schema.ts
+
+    Import your schema in Mongo modules
+        go to:
+            src/users/users.module.ts
+                In user.modules.ts:
+                    import:
+                        import { MongooseModule } from '@nestjs/mongoose';
+
+                    put in -> @Modules({})
+                        imports: [MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])],
+
+        To import your schame in services:
+            go to: src/users/users.service.ts:
+                imports: 
+                    import { User, UserDocument } from './entities/user.entity';
+                    import { Model } from 'mongoose'
+                    import { InjectModel } from '@nestjs/mongoose'
+                
+                put in class userService: 
+                    constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+
+Tu run the server:
+    $ npm run start:dev
+
+Documentation
+    https://docs.nestjs.com/recipes
+
