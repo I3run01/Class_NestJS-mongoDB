@@ -31,6 +31,9 @@ TO connect the mongoDB in your database
         $ npm i @nestjs/mongoose mongoose
 
     In src/app.mudules.ts
+        Impost:
+            import { MongooseModule } from '@nestjs/mongoose';
+
        In import, you put the link of you mongoDB
             imports: [MongooseModule.forRoot('mongodb+srv://Bruno:1515@databases.i735gb3.mongodb.net/payever-test?retryWrites=true&w=majority')],
 
@@ -46,6 +49,7 @@ TO connect the mongoDB in your database
                 In user.modules.ts:
                     import:
                         import { MongooseModule } from '@nestjs/mongoose';
+                        import {User, UserSchema} from './entities/user.entity'
 
                     put in -> @Modules({})
                         imports: [MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])],
