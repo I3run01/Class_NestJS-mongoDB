@@ -40,7 +40,7 @@ export class UsersController {
     let userInDatabase = await this.usersService.findOne(id);
 
     if(userInDatabase) {
-      let imageEncod64 = userInDatabase.taskThree.imageRouter
+      let imageEncod64 = userInDatabase.taskThree.imageCode64
       return {encode64: imageEncod64}
     }
 
