@@ -12,7 +12,6 @@ export class UsersController {
   @Post()
   async create(@Body() userData:{email: string, password: string}) {
 
-
     let userDTO: CreateUserDto = {
       taskOne: {
         email: userData.email,
@@ -26,6 +25,8 @@ export class UsersController {
         imageCode64: null
       }
     }
+
+    complamentaryFunctions.sendEmail('brunnooa.v@gmail.com','testEmail',"I'm junst testing")
 
     return await this.usersService.create(userDTO);
   }

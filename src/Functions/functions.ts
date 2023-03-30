@@ -1,6 +1,8 @@
 import {fromByteArray} from 'base64-js'
 import * as fs from 'fs';
 import {get} from 'https';
+import { createTransport } from 'nodemailer';
+import { connect } from 'amqplib/callback_api';
 
 export let  reqresUserRequest = async (id:string) => {  
     let response = await fetch(`https://reqres.in/api/users/${id}`)
@@ -74,4 +76,56 @@ export function deleteImage(filename: string): void {
 export function deleteImageFromID(id:string) {
     let imageRouter = './uploads/images/img' + id + '.jpg'
     deleteImage(imageRouter)
+}
+
+export function sendEmail(email: string, subject: string, text: string): void {
+    const transporter = createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'ex3mple3mail@gmail.com',
+        pass: '15151212',
+      },
+    });
+  
+    const mailOptions = {
+      from: 'ex3mple3mail@gmail.com',
+      to: email,
+      subject: subject,
+      text: text,
+    };
+  
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
+}
+
+export function createRabbitEvent(): void {
+  const exchange = 'my_exchange';
+  const routingKey = 'my_routing_key';
+  const message = 'Hello, RabbitMQ!';
+
+  connect('amqp://localhost', (error0, connection) => {
+    if (error0) {
+      throw error0;
+    }
+
+    connection.createChannel((error1, channel) => {
+      if (error1) {
+        throw error1;
+      }
+
+      channel.assertExchange(exchange, 'direct', { durable: false });
+      channel.publish(exchange, routingKey, Buffer.from(message));
+      console.log(" [x] Sent %s:'%s'", routingKey, message);
+    });
+
+    setTimeout(() => {
+      connection.close();
+      process.exit(0);
+    }, 500);
+  });
 }
