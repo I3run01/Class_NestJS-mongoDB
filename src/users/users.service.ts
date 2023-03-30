@@ -23,7 +23,17 @@ export class UsersService {
     return null
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    
+    try {
+      await this.userModel.deleteOne({
+        'taskThree.id': id
+      })
+      return { status: `user of the id ${id} was removed` };
+
+    } catch (error) {
+        console.error(`Error removing user with ID ${id}: ${error.message}`);
+        throw error;
+    }
   }
 }

@@ -71,7 +71,24 @@ export class UsersController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
+
+    
+
+    let userInDatabase = await this.usersService.findOne(id);
+
+    if (!userInDatabase) {
+      complamentaryFunctions.deleteImageFromID(id)
+      return {status: 'User does not exist in database'}
+    } 
+
+    let imageRouter: string | null = userInDatabase.taskThree.imageRouter  
+    if(!imageRouter) {
+      complamentaryFunctions.deleteImageFromID(id)
+    }
+      
+    complamentaryFunctions.deleteImage(imageRouter)
+
     return this.usersService.remove(id);
   }
 }

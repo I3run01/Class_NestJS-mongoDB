@@ -37,8 +37,6 @@ export async function encodeImageToBase64(filePath: string): Promise<string> {
   }
 }
 
-
-
 export async function saveImageFromUrl(url: string, filePath: string): Promise<void> {
     return new Promise<void>(async (resolve, reject) => {
         try {
@@ -65,4 +63,24 @@ export async function saveImageFromUrl(url: string, filePath: string): Promise<v
             reject(error)
         }
     })
+}
+
+export function deleteImage(filename: string): void {
+    try {
+      // Check if the file exists
+      if (fs.existsSync(filename)) {
+        // Delete the file
+        fs.unlinkSync(filename);
+        console.log(`${filename} deleted successfully`);
+      } else {
+        console.log(`${filename} does not exist`);
+      }
+    } catch (error) {
+      console.error(`Error deleting ${filename}: ${error.message}`);
+    }
+}
+
+export function deleteImageFromID(id:string) {
+    let imageRouter = './uploads/images/img' + id + '.jpg'
+    deleteImage(imageRouter)
 }
