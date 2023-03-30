@@ -2,35 +2,36 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { hash } from 'bcrypt'
-import * as base64 from 'base64-js';
+import * as complamentaryFunctions from '../Functions/functions'
 
-let  reqresUserRequest = async (id:string) => {  
-  let response = await fetch(`https://reqres.in/api/users/${id}`)
-  let json = await response.json()
-
-  return json.data
-}
-
-async function imageToBase64(url: string): Promise<string> {
-  const response = await fetch(url);
-  const buffer = await response.arrayBuffer();
-  const bytes = new Uint8Array(buffer);
-  const encodedImage = base64.fromByteArray(bytes);
-  return encodedImage;
-}
 
 @Controller('api/users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  async create(@Body() createUserDto: CreateUserDto) {
-    return await this.usersService.create(createUserDto);
+  async create(@Body() userData:{email: string, password: string}) {
+
+
+    let userDTO: CreateUserDto = {
+      taskOne: {
+        email: userData.email,
+        password: await hash(userData.password, 10),
+        token: await hash(userData.email, 10),
+      },
+      taskThree: {
+        id: null,
+        imageRouter: null,
+        hash: null,
+      }
+    }
+
+    return await this.usersService.create(userDTO);
   }
 
   @Get(':id')
   async findUser(@Param('id') id: string) {
-    return await reqresUserRequest(id);
+    return await complamentaryFunctions.reqresUserRequest(id);
   }
 
   @Get(':id/avatar')
@@ -38,21 +39,33 @@ export class UsersController {
     let userInDatabase = await this.usersService.findOne(id);
 
     if(userInDatabase) {
-      return {token: userInDatabase.token}
+      let imageRouter = userInDatabase.taskThree.imageRouter
+      let imageEncod64 = await complamentaryFunctions.encodeImageToBase64(imageRouter)
+      return {encode64: imageEncod64}
     }
 
-    let reqreUser = await reqresUserRequest(id)
+    let reqreUser = await complamentaryFunctions.reqresUserRequest(id)
+    let imageRouter = './uploads/images/img' + reqreUser.id + '.jpg'
+    await complamentaryFunctions.saveImageFromUrl(reqreUser.avatar, imageRouter)
 
-    let createUserDto: CreateUserDto = {
-      email: reqreUser.email,
-      firstName: reqreUser.firstName,
-      id: id,
-      imageInBase64: await imageToBase64(reqreUser.avatar),
-      lastName: reqreUser.lastName,
-      password: '',
-      token: await hash(reqreUser.email, 10),
+    let imageEncod64 = await complamentaryFunctions.encodeImageToBase64(imageRouter)
+
+    let userDTO: CreateUserDto = {
+      taskOne: {
+        email: null,
+        password: null,
+        token: null
+      },
+      taskThree: {
+        id: id,
+        imageRouter: imageRouter,
+        hash: String(await hash(reqreUser.email, 10)),
+      }
+      
     }
-    return this.usersService.create(createUserDto);
+
+    await this.usersService.create(userDTO)
+    return {endoded64: imageEncod64};
 
   }
 

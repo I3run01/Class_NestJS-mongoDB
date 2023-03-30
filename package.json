@@ -25,10 +25,14 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/mongoose": "^9.2.2",
     "@nestjs/platform-express": "^9.0.0",
+    "@types/got": "^9.6.12",
     "bcrypt": "^5.1.0",
+    "got": "^12.6.0",
+    "image-downloader": "^4.3.0",
     "mongoose": "^7.0.3",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.2.0"
+    "rxjs": "^7.2.0",
+    "some-library": "^1.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",

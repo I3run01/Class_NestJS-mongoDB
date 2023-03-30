@@ -6,27 +6,19 @@ export type UserDocument = HydratedDocument<User>;
 @Schema()
 export class User {
     
-  @Prop()
-  id: string;
+  @Prop({type:Object})
+  taskOne: {
+    email: string | null
+    password: string | null
+    token: string | null
+  };
 
-  @Prop()
-  email: string;
-
-  @Prop()
-  password: string;
-
-  @Prop()
-  token: string
-
-  @Prop()
-  firstName: string;
-
-  @Prop()
-  lastName: string;
-
-  @Prop()
-  imageInBase64: string;
-
-}
+  @Prop({type:Object})
+  taskThree: {
+    id: string | null
+    hash: string | null
+    imageRouter: string | null
+  }
+};
 
 export const UserSchema = SchemaFactory.createForClass(User);
