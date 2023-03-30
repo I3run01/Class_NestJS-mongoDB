@@ -23,6 +23,7 @@ export class UsersController {
         id: null,
         imageRouter: null,
         hash: null,
+        imageCode64: null
       }
     }
 
