@@ -39,8 +39,7 @@ export class UsersController {
     let userInDatabase = await this.usersService.findOne(id);
 
     if(userInDatabase) {
-      let imageRouter = userInDatabase.taskThree.imageRouter
-      let imageEncod64 = await complamentaryFunctions.encodeImageToBase64(imageRouter)
+      let imageEncod64 = userInDatabase.taskThree.imageRouter
       return {encode64: imageEncod64}
     }
 
@@ -60,6 +59,7 @@ export class UsersController {
         id: id,
         imageRouter: imageRouter,
         hash: String(await hash(reqreUser.email, 10)),
+        imageCode64: imageEncod64
       }
       
     }

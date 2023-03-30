@@ -18,6 +18,7 @@ export class User {
     id: string | null
     hash: string | null
     imageRouter: string | null
+    imageCode64: string | null
   }
 };
 
