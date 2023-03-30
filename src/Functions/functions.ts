@@ -1,4 +1,3 @@
-
 import {fromByteArray} from 'base64-js'
 import * as fs from 'fs';
 import {get} from 'https';
@@ -8,14 +7,6 @@ export let  reqresUserRequest = async (id:string) => {
     let json = await response.json()
   
     return json.data
-}
-  
-export async function imageToBase64(url: string): Promise<string> {
-    const response = await fetch(url);
-    const buffer = await response.arrayBuffer();
-    const bytes = new Uint8Array(buffer);
-    const encodedImage = fromByteArray(bytes);
-    return encodedImage;
 }
 
 export async function encodeImageToBase64(filePath: string): Promise<string> {
