@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { hash } from 'bcrypt'
-import * as complamentaryFunctions from '../Functions/functions'
+import { hash } from 'bcrypt';
+import * as complamentaryFunctions from '../Functions/functions';
 
 
 @Controller('api/users')
