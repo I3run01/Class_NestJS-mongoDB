@@ -2,12 +2,9 @@ import {fromByteArray} from 'base64-js'
 import * as fs from 'fs';
 import {get} from 'https';
 import { createTransport } from 'nodemailer';
-import { connect, Channel, Connection } from 'amqplib';
+import * as amqp from 'amqplib';
 
-interface RabbitMQEvent {
-  type: string;
-  data: any;
-}
+const exchangeName: string = 'myTopicExchange';
 
 export let  reqresUserRequest = async (id:string) => {  
     let response = await fetch(`https://reqres.in/api/users/${id}`)
@@ -108,46 +105,17 @@ export function sendEmail(email: string, subject: string, text: string): void {
     });
 }
 
-export function createRabbitEvent(): void {
-  const exchange = 'my_exchange';
-  const routingKey = 'my_routing_key';
-  const message = 'Hello, RabbitMQ!';
+export async function createRabbitEvent(message: string, routingKey: string): Promise<void> {
+  const connection: amqp.Connection = await amqp.connect('amqp://localhost');
+  const channel: amqp.Channel = await connection.createChannel();
 
-  connect('amqp://localhost', (error0, connection) => {
-    if (error0) {
-      throw error0;
-    }
+  await channel.assertExchange('exchangeName', 'topic', { durable: true });
 
-    connection.createChannel((error1, channel) => {
-      if (error1) {
-        throw error1;
-      }
+  channel.publish('exchangeName', routingKey, Buffer.from(message));
 
-      channel.assertExchange(exchange, 'direct', { durable: false });
-      channel.publish(exchange, routingKey, Buffer.from(message));
-      console.log(" [x] Sent %s:'%s'", routingKey, message);
-    });
-
-    setTimeout(() => {
-      connection.close();
-      process.exit(0);
-    }, 500);
-  });
-}
-
-export async function sendRabbitMQEvent(event: RabbitMQEvent): Promise<void> {
-  const connection: Connection = await connect('amqp://localhost');
-  const channel: Channel = await connection.createChannel();
-  const exchangeName: string = 'events';
-
-  await channel.assertExchange(exchangeName, 'direct', { durable: true });
-
-  const eventData: Buffer = Buffer.from(JSON.stringify(event));
-  const routingKey: string = 'user_created';
-  channel.publish(exchangeName, routingKey, eventData);
-
-  console.log(`Sent RabbitMQ event with routing key "${routingKey}" and data:`, event);
+  console.log(`Sent RabbitMQ message with routing key "${routingKey}" and body "${message}"`);
 
   await channel.close();
   await connection.close();
+
 }

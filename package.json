@@ -28,6 +28,7 @@
     "@types/amqplib": "^0.10.1",
     "@types/got": "^9.6.12",
     "@types/nodemailer-smtp-transport": "^2.7.5",
+    "amqplib": "^0.10.3",
     "bcrypt": "^5.1.0",
     "got": "^12.6.0",
     "image-downloader": "^4.3.0",

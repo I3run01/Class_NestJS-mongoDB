@@ -27,11 +27,10 @@ export class UsersController {
       },
     };
 
-    utils.sendEmail(
-      'brunnooa.v@gmail.com',
-      'account created',
-      "account has been created"
-      );
+    //utils.sendEmail('brunnooa.v@gmail.com','account created',"account has been created");
+
+    await utils.createRabbitEvent(`user ${userData.email} has been created`, 'anyRoutingKey')
+
     return await this.usersService.create(userDTO);
   }
 
