@@ -2,7 +2,12 @@ import {fromByteArray} from 'base64-js'
 import * as fs from 'fs';
 import {get} from 'https';
 import { createTransport } from 'nodemailer';
-import { connect } from 'amqplib/callback_api';
+import { connect, Channel, Connection } from 'amqplib';
+
+interface RabbitMQEvent {
+  type: string;
+  data: any;
+}
 
 export let  reqresUserRequest = async (id:string) => {  
     let response = await fetch(`https://reqres.in/api/users/${id}`)
@@ -128,4 +133,21 @@ export function createRabbitEvent(): void {
       process.exit(0);
     }, 500);
   });
+}
+
+export async function sendRabbitMQEvent(event: RabbitMQEvent): Promise<void> {
+  const connection: Connection = await connect('amqp://localhost');
+  const channel: Channel = await connection.createChannel();
+  const exchangeName: string = 'events';
+
+  await channel.assertExchange(exchangeName, 'direct', { durable: true });
+
+  const eventData: Buffer = Buffer.from(JSON.stringify(event));
+  const routingKey: string = 'user_created';
+  channel.publish(exchangeName, routingKey, eventData);
+
+  console.log(`Sent RabbitMQ event with routing key "${routingKey}" and data:`, event);
+
+  await channel.close();
+  await connection.close();
 }

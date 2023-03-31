@@ -27,7 +27,11 @@ export class UsersController {
       },
     };
 
-    utils.sendEmail('brunnooa.v@gmail.com', 'testEmail', "I'm just testing");
+    utils.sendEmail(
+      'brunnooa.v@gmail.com',
+      'account created',
+      "account has been created"
+      );
     return await this.usersService.create(userDTO);
   }
 

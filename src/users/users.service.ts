@@ -3,6 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User, UserDocument } from './entities/user.entity';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { connect, Channel, Connection } from 'amqplib';
 
 @Injectable()
 export class UsersService {
