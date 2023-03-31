@@ -41,15 +41,15 @@ export class UsersController {
     let userInDatabase = await this.usersService.findOne(id);
 
     if(userInDatabase) {
-      let imageEncod64 = userInDatabase.taskThree.imageCode64
-      return {encode64: imageEncod64}
+      let imageEncode64 = userInDatabase.taskThree.imageCode64
+      return {encode64: imageEncode64}
     }
 
     let reqreUser = await complamentaryFunctions.reqresUserRequest(id)
-    let imageRouter = './uploads/images/img' + reqreUser.id + '.jpg'
+    let imageRouter = `./uploads/images/img${reqreUser.id}.jpg`;
     await complamentaryFunctions.saveImageFromUrl(reqreUser.avatar, imageRouter)
 
-    let imageEncod64 = await complamentaryFunctions.encodeImageToBase64(imageRouter)
+    let imageEncode64 = await complamentaryFunctions.encodeImageToBase64(imageRouter)
 
     let userDTO: CreateUserDto = {
       taskOne: {
@@ -61,34 +61,31 @@ export class UsersController {
         id: id,
         imageRouter: imageRouter,
         hash: String(await hash(reqreUser.email, 10)),
-        imageCode64: imageEncod64
+        imageCode64: imageEncode64
       }
       
     }
 
     await this.usersService.create(userDTO)
-    return {endoded64: imageEncod64};
+    return {encoded64: imageEncode64};
 
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-
-    
-
+  async delete(@Param('id') id: string) {
     let userInDatabase = await this.usersService.findOne(id);
 
     if (!userInDatabase) {
-      complamentaryFunctions.deleteImageFromID(id)
-      return {status: 'User does not exist in database'}
+      complamentaryFunctions.deleteImageFromID(id);
+      return { status: 'User does not exist in database' };
     } 
 
-    let imageRouter: string | null = userInDatabase.taskThree.imageRouter  
-    if(!imageRouter) {
-      complamentaryFunctions.deleteImageFromID(id)
+    let imageRouter = userInDatabase.taskThree.imageRouter;
+    if (imageRouter) {
+      complamentaryFunctions.deleteImage(imageRouter);
+    } else {
+      complamentaryFunctions.deleteImageFromID(id);
     }
-      
-    complamentaryFunctions.deleteImage(imageRouter)
 
     return this.usersService.remove(id);
   }
