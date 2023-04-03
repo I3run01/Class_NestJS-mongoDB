@@ -18,7 +18,10 @@ export class UsersService {
       'taskThree.id': id,
     });
 
-    return user || null;
+    if (!user) {
+     return(null);;
+    }
+    return user
   }
 
   async remove(id: string) {
@@ -29,8 +32,23 @@ export class UsersService {
 
       return { status: `User with ID ${id} was removed` };
     } catch (error) {
-      console.error(`Error removing user with ID ${id}: ${error.message}`);
-      throw error;
+        console.error(`Error removing user with ID ${id}: ${error.message}`);
+        throw error;
     }
   }
+
+  async updateHash(id: string, hash: string) {
+
+    await this.userModel.updateOne(
+      {'taskThree.id': id,},
+      {
+          $set: {
+              'taskThree.hash': hash
+          }
+      },
+    )
+
+    return {status: true}
+  }
+
 }

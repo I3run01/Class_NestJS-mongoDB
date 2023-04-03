@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { hash } from 'bcrypt';
@@ -41,37 +41,36 @@ export class UsersController {
 
   @Get(':id/avatar')
   async saveImage(@Param('id') id: string) {
-    let userInDatabase = await this.usersService.findOne(id);
-    let imageRouter:string, imageEncode64:string | null;
 
-    if (userInDatabase) {
-      return userInDatabase.taskThree.imageCode64;
-    } 
+      let userInDatabase = await this.usersService.findOne(id);
+      let imageRouter:string, imageEncode64:string | null;
+
+      if (userInDatabase) {
+        return {encoded64: userInDatabase.taskThree.imageCode64};
+      }
+      
+      const reqreUser = await utils.reqresUserRequest(id);
+      imageRouter = `./uploads/images/img${reqreUser.id}.jpg`;
+      await utils.saveImageFromUrl(reqreUser.avatar, imageRouter);
+  
+      imageEncode64 = await utils.encodeImageToBase64(imageRouter);
+  
+      const userDTO: CreateUserDto = {
+        taskOne: {
+          email: null,
+          password: null,
+          token: null,
+        },
+        taskThree: {
+          id: id,
+          imageRouter: imageRouter,
+          hash: String(await hash(reqreUser.email, 10)),
+          imageCode64: imageEncode64,
+        },
+      };
+      await this.usersService.create(userDTO);
+      return { encoded64: imageEncode64 };
     
-    const reqreUser = await utils.reqresUserRequest(id);
-    imageRouter = `./uploads/images/img${reqreUser.id}.jpg`;
-    await utils.saveImageFromUrl(reqreUser.avatar, imageRouter);
-
-    imageEncode64 = await utils.encodeImageToBase64(imageRouter);
-
-    const userDTO: CreateUserDto = {
-      taskOne: {
-        email: null,
-        password: null,
-        token: null,
-      },
-      taskThree: {
-        id: id,
-        imageRouter: imageRouter,
-        hash: String(await hash(reqreUser.email, 10)),
-        imageCode64: imageEncode64,
-      },
-    };
-
-    await this.usersService.create(userDTO);
-    
-
-    return { encoded64: imageEncode64 };
   }
 
   @Delete(':id')
@@ -92,5 +91,10 @@ export class UsersController {
     }
 
     return this.usersService.remove(id);
+  }
+
+  @Put(':id')
+  async updateUser(@Param('id') id: string, @Body() updateData: any) {
+      return await this.usersService.updateHash(id, 'test hash')
   }
 }
