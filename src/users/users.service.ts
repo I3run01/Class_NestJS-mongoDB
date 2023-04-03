@@ -37,18 +37,20 @@ export class UsersService {
     }
   }
 
-  async updateHash(id: string, hash: string) {
+  async updateHash(id: string, hash: string): Promise<any> {
 
-    await this.userModel.updateOne(
-      {'taskThree.id': id,},
-      {
-          $set: {
-              'taskThree.hash': hash
-          }
-      },
-    )
+    let user = await this.findOne(id)
 
-    return {status: true}
+    if(!user) {
+      return {response: 'User does not exist'}
+    }
+
+    user.set({
+      'taskThree.id': hash
+    })
+    user.save()
+
+    return user
   }
 
 }
