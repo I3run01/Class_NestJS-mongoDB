@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { hash } from 'bcrypt';
-import * as utils from '../Functions/functions';
+import * as utils from '../Utils/functions';
 
 @Controller('api/users')
 export class UsersController {

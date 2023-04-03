@@ -117,7 +117,3 @@ export async function createRabbitEvent(message: string, routingKey: string): Pr
   await connection.close();
 
 }
-
-(() => {
-  console.log("This function will be auto-executed!");
-})();
