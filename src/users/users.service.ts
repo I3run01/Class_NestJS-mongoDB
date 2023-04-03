@@ -48,7 +48,7 @@ export class UsersService {
     user.set({
       'taskThree.id': hash
     })
-    user.save()
+    await user.save()
 
     return user
   }
