@@ -94,7 +94,7 @@ export class UsersController {
   }
 
   @Put(':id')
-  async updateUser(@Param('id') id: string, @Body() updateData: any) {
-      return await this.usersService.updateHash(id, 'test hash')
+  async updateUser(@Param('id') id: string, @Body() updateData: {newHash: string}) {
+      return await this.usersService.updateHash(id, updateData.newHash)
   }
 }
