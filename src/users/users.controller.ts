@@ -95,6 +95,7 @@ export class UsersController {
 
   @Put(':id')
   async updateUser(@Param('id') id: string, @Body() updateData: {newHash: string}) {
+      console.log(updateData)
       return await this.usersService.updateHash(id, updateData.newHash)
   }
 }
