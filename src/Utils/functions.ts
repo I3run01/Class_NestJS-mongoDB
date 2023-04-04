@@ -4,7 +4,7 @@ import {get} from 'https';
 import { createTransport } from 'nodemailer';
 import * as amqp from 'amqplib';
 
-export let  reqresUserRequest = async (id:string) => {  
+export let reqresUserRequest = async (id:string) => {  
     let response = await fetch(`https://reqres.in/api/users/${id}`)
     let json = await response.json()
   
