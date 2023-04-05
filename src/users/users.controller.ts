@@ -102,4 +102,10 @@ export class UsersController {
       console.log(updateData)
       return await this.usersService.updateHash(id, updateData.newHash)
   }
+
+  @Post('rabbit')
+  async createWithRabbit(@Body() userData: { email: string; password: string }) {
+   
+    return this.client.send('createUser', userData)
+  }
 }
