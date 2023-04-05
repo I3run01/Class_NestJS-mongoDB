@@ -32,10 +32,10 @@ export class UsersController {
     };
 
     //utils.sendEmail('brunnooa.v@gmail.com','account created',"account has been created");
+    //return this.client.send<number>({ cmd: 'sum' }, [1, 6, 3]);
+    
     this.client.emit('hello.world', 'hello world')
-    let response = this.client.send<number>({ cmd: 'sum' }, [1, 2, 3]);
-    console.log(response)
-    return await this.usersService.create(userDTO);
+    await this.usersService.create(userDTO);
   }
 
   @Get(':id')
