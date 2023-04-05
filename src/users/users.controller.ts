@@ -10,7 +10,7 @@ export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     @Inject('userService') private readonly cliet: ClientProxy
-    ) {}
+  ) {}
 
   @Post()
   async create(@Body() userData: { email: string; password: string }) {
@@ -32,7 +32,6 @@ export class UsersController {
     };
 
     //utils.sendEmail('brunnooa.v@gmail.com','account created',"account has been created");
-    await utils.createRabbitEvent(`user ${userData.email} has been created`, 'anyRoutingKey')
     this.cliet.emit('hello.world', 'hello world')
     return await this.usersService.create(userDTO);
   }
