@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, Inject } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, Inject, } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { hash } from 'bcrypt';
@@ -9,7 +9,7 @@ import { ClientProxy } from '@nestjs/microservices';
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    @Inject('userService') private readonly cliet: ClientProxy
+    @Inject('userService') private client: ClientProxy
   ) {}
 
   @Post()
@@ -32,7 +32,9 @@ export class UsersController {
     };
 
     //utils.sendEmail('brunnooa.v@gmail.com','account created',"account has been created");
-    this.cliet.emit('hello.world', 'hello world')
+    this.client.emit('hello.world', 'hello world')
+    let response = this.client.send<number>({ cmd: 'sum' }, [1, 2, 3]);
+    console.log(response)
     return await this.usersService.create(userDTO);
   }
 
