@@ -9,7 +9,7 @@ import { ClientProxy } from '@nestjs/microservices';
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    @Inject('userService') private client: ClientProxy
+    @Inject('userService') private client: ClientProxy,
   ) {}
 
   @Post()
@@ -33,9 +33,9 @@ export class UsersController {
 
     //utils.sendEmail('brunnooa.v@gmail.com','account created',"account has been created");
     //return this.client.send<number>({ cmd: 'sum' }, [1, 6, 3]);
-    
-    this.client.emit('hello.world', 'hello world')
-    await this.usersService.create(userDTO);
+
+    this.client.emit('hello.world', 'afafa')
+    return await this.usersService.create(userDTO);
   }
 
   @Get(':id')

@@ -107,7 +107,7 @@ export async function createRabbitEvent(message: string, routingKey: string): Pr
   const connection: amqp.Connection = await amqp.connect('amqp://localhost');
   const channel: amqp.Channel = await connection.createChannel();
 
-  await channel.assertExchange('exchangeName', 'topic', { durable: true });
+  await channel.bindQueue('myQueue','hello.world', 'hello.world')
 
   channel.publish('exchangeName', routingKey, Buffer.from(message));
 
