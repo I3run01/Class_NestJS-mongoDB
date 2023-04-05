@@ -104,7 +104,7 @@ export class UsersController {
   }
 
   @Post('rabbit')
-  async createWithRabbit(@Body() userData: { email: string; password: string }) {
+  createWithRabbit(@Body() userData: { email: string; password: string }) {
    
     return this.client.send('createUser', userData)
   }
