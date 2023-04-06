@@ -42,16 +42,16 @@ export class UsersController {
 
   @Get(':id')
   async findUser(@Param('id') id: string) {
-    return await utils.reqresUserRequest(id);
+    let user = await utils.reqresUserRequest(id);
+
+    if(!user) return null
+    
+    return user
   }
 
-  @ApiResponse({
-    status: 404,
-    description: 'user not found',
-  })
   @Get(':id/avatar')
   async saveImage(@Param('id') id: string) {
-
+    
       let userInDatabase = await this.usersService.findOne(id);
       let imageRouter:string, imageEncode64:string | null;
 
