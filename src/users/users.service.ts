@@ -7,10 +7,9 @@ import { InjectModel } from '@nestjs/mongoose';
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
-
-  async create(createUserDto: CreateUserDto) {
-    return this.userModel.create(createUserDto);
-  }
+    async create(createUserDto: CreateUserDto) {
+      return this.userModel.create(createUserDto);
+    }
 
   async findOne(id: string) {
     const user = await this.userModel.findOne({
@@ -24,16 +23,9 @@ export class UsersService {
   }
 
   async remove(id: string) {
-    try {
-      await this.userModel.deleteOne({
-        'taskThree.id': id,
+      return await this.userModel.deleteOne({
+        'taskThree.id': 890,
       });
-
-      return { status: `User with ID ${id} was removed` };
-    } catch (error) {
-        console.error(`Error removing user with ID ${id}: ${error.message}`);
-        throw error;
-    }
   }
 
   async updateHash(id: string, hash: string): Promise<any> {
