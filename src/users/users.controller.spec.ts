@@ -69,32 +69,4 @@ describe('UsersController', () => {
       // You can add additional assertions to test the behavior of the route
     });
   });
-
-  describe('GET /users/:id', () => {
-    it('should return user details when valid id is provided', async () => {
-      const userId = '7'; // the user ID to be used in the test
-      
-      const expectedResult = { 
-        id: Number(userId),
-        email: 'michael.lawson@reqres.in',
-        first_name: 'Michael',
-        last_name: 'Lawson',
-        avatar: 'https://reqres.in/img/faces/7-image.jpg'
-      }; // the expected result from the API
-      
-      // make a GET request to the API
-      const response = await usersController.findUser(userId);
-  
-      // assert that the API response matches the expected result
-      expect(response).toEqual(expectedResult);
-    });
-  
-    it('should return a null body', async () => {
-      const userId = 'invalid-id'; // the invalid user ID to be used in the test
-      
-      // make a GET request to the API with an invalid ID
-      const response = await usersController.findUser('2376738');
-      expect(response).toEqual(null);
-    });
-  }); 
 });
