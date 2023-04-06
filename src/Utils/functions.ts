@@ -7,7 +7,7 @@ import * as amqp from 'amqplib';
 export let reqresUserRequest = async (id:string) => {  
     let response = await fetch(`https://reqres.in/api/users/${id}`)
     let json = await response.json()
-  
+
     return json.data
 }
 

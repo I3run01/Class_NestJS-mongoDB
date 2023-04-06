@@ -64,8 +64,25 @@ TO connect the mongoDB in your database
                 put in class userService: 
                     constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-Tu run the server:
+To run the server:
     $ npm run start:dev
+
+To run test
+    Run the test:
+        $ npm run test
+
+    Run and watch the test
+        $ npm run test:watch
+
+    Run a specific test
+        First, go to the test you want to run, then:
+            $npm run test -t [patch]
+
+            or, to also watch the test:
+                $npm run test: watch -t [patch]
+
+
+
 
 Documentation
     https://docs.nestjs.com/recipes

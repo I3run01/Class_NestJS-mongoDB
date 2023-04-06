@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, Inject, } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, Inject, Req, HttpCode} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { hash } from 'bcrypt';
 import * as utils from '../Utils/functions';
 import { ClientProxy } from '@nestjs/microservices';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('users')
 export class UsersController {
@@ -14,6 +15,7 @@ export class UsersController {
 
   @Post()
   async create(@Body() userData: { email: string; password: string }) {
+
     const hashedPassword = await hash(userData.password, 10);
     const hashedEmail = await hash(userData.email, 10);
 
@@ -43,6 +45,10 @@ export class UsersController {
     return await utils.reqresUserRequest(id);
   }
 
+  @ApiResponse({
+    status: 404,
+    description: 'user not found',
+  })
   @Get(':id/avatar')
   async saveImage(@Param('id') id: string) {
 
