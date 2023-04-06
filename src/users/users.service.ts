@@ -24,7 +24,7 @@ export class UsersService {
 
   async remove(id: string) {
       return await this.userModel.deleteOne({
-        'taskThree.id': 890,
+        'taskThree.id': id,
       });
   }
 
