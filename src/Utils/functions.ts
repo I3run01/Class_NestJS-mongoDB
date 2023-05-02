@@ -102,18 +102,3 @@ export function sendEmail(email: string, subject: string, text: string): void {
       }
     });
 }
-
-export async function createRabbitEvent(message: string, routingKey: string): Promise<void> {
-  const connection: amqp.Connection = await amqp.connect('amqp://localhost');
-  const channel: amqp.Channel = await connection.createChannel();
-
-  await channel.bindQueue('myQueue','hello.world', 'hello.world')
-
-  channel.publish('exchangeName', routingKey, Buffer.from(message));
-
-  console.log(`Sent RabbitMQ message with routing key "${routingKey}" and body "${message}"`);
-
-  await channel.close();
-  await connection.close();
-
-}
